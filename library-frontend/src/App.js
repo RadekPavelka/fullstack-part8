@@ -4,12 +4,37 @@ import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import LoginForm from "./components/LoginForm";
 import Recommendations from "./components/Recommendations";
-import { useApolloClient } from "@apollo/client";
+import { useApolloClient, useSubscription } from "@apollo/client";
+import { ALL_BOOKS, BOOK_ADDED } from "./queries";
+
+export const updateCache = (cache, query, addedBook) => {
+  const uniqByTitle = (a) => {
+    let seen = new Set();
+    return a.filter((item) => {
+      let k = item.name;
+      return seen.has(k) ? false : seen.add(k);
+    });
+  };
+  cache.updateQuery(query, ({ allBooks }) => {
+    return {
+      allBooks: uniqByTitle(allBooks.concat(addedBook)),
+    };
+  });
+};
 
 const App = () => {
   const [page, setPage] = useState("authors");
   const [token, setToken] = useState(null);
   const client = useApolloClient();
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const addedBook = subscriptionData.data.bookAdded;
+      console.log(addedBook);
+      window.alert(`New book ${addedBook.title} was just added`);
+      updateCache(client.cache, { query: ALL_BOOKS }, addedBook);
+    },
+  });
 
   const logout = () => {
     setToken(null);

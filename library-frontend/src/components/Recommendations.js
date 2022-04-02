@@ -8,11 +8,11 @@ const Recommendations = ({ show }) => {
   if (!show) {
     return null;
   }
-  if (result.error || books.error) {
+  if (result.error) {
     return <div>Error...</div>;
   }
 
-  if (result.loading || books.loading) {
+  if (result.loading) {
     return <div>Loading...</div>;
   }
 
