@@ -12,10 +12,6 @@ const Authors = (props) => {
     refetchQueries: [{ query: ALL_AUTHORS }],
   });
 
-  if (!props.show) {
-    return null;
-  }
-
   if (result.loading) {
     return <div>loading...</div>;
   }

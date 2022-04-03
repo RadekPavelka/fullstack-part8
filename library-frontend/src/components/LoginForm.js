@@ -1,10 +1,12 @@
 import { useMutation } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { LOGIN } from "../queries";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = ({ show, setToken }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const [login, result] = useMutation(LOGIN, {
     onError: (error) => {
@@ -17,6 +19,7 @@ const LoginForm = ({ show, setToken }) => {
       const token = result.data.login.value;
       setToken(token);
       localStorage.setItem("library-user-token", token);
+      navigate("/");
     }
   }, [result.data]); //eslint-disable-line
 
@@ -27,10 +30,6 @@ const LoginForm = ({ show, setToken }) => {
     setUsername("");
     setPassword("");
   };
-
-  if (!show) {
-    return null;
-  }
 
   return (
     <div>

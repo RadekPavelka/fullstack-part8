@@ -23,10 +23,6 @@ const NewBook = (props) => {
     },
   });
 
-  if (!props.show) {
-    return null;
-  }
-
   const notify = (message) => {
     setErrorMessage(message);
     setTimeout(() => {

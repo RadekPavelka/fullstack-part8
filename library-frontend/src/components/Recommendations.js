@@ -1,18 +1,15 @@
 import { ME, ALL_BOOKS } from "../queries";
 import { useQuery } from "@apollo/client";
 
-const Recommendations = ({ show }) => {
+const Recommendations = () => {
   const books = useQuery(ALL_BOOKS);
   const result = useQuery(ME);
 
-  if (!show) {
-    return null;
-  }
-  if (result.error) {
+  if (result.error || books.error) {
     return <div>Error...</div>;
   }
 
-  if (result.loading) {
+  if (result.loading || books.loading) {
     return <div>Loading...</div>;
   }
 
@@ -24,7 +21,9 @@ const Recommendations = ({ show }) => {
   return (
     <div>
       <h2>recommendations</h2>
-      <p>books in your favorite genre {favoriteGenre}</p>
+      <p>
+        books in your favorite genre <b>{favoriteGenre}</b>
+      </p>
       <table>
         <tbody>
           <tr>
